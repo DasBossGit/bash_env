@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# 3rd IN EXECUTION-FLOW
+
 g() {
     grep -E "$@"
 }
