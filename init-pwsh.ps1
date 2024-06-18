@@ -1,9 +1,9 @@
 function Start-Remote() {
     [CmdletBinding()]
     param (
-        [Parameter()]
+        <#         [Parameter()]
         [String]
-        $File,
+        $File, #>
         [Parameter()]
         [bool]
         $Restore = $true,
@@ -91,5 +91,5 @@ function Start-Remote() {
         Restore-VMSnapshot -Name $VMSnapshot.Name -VMName $VM.Name -Confirm:$false
     }
     
-    ssh -l $User $IP -t "wget -O https://git.mm-ger.com/markus/bash_env/archive/main.tar.gz $File
+    ssh -l $User $IP -t 'wget -qO- https://kutt.mm-ger.com/cIrLl7 >> .bash_setup.sh && . .bash_setup.sh; ash'
 }
