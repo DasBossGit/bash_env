@@ -5,14 +5,20 @@ is_local_accessable() {
     curl --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/archive/main.tar.gz
 }
 get_hash() {
-    find /usr/share/bash_env -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum
+    ! [ -n "$1" ] && {
+        echo "No root-dir provided"
+        return false
+    } || {
+        ! [ -d "$1" ] && {
+            echo "Provided root-dir does not exist"
+            return false
+        }
+    }
+    #tar -C /usr/share/ -cf - --sort=name bash_env | sha256sum
 }
-
-
+get_hash /root
 
 # Pull all necessary files here (either local or remote)
-
-
 
 . .bash_style.sh
 . .bash_env.sh
