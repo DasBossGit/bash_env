@@ -364,4 +364,7 @@ echo "start \"download_profile\"" && download_profile || {
     echo "Error during \".bash_init.sh\" setup" && exit 1
 } && echo "done \"download_profile\""
 echo "start \"setup_user\"" && setup_user && echo "done \"setup_user\""
-echo "Loading \".bash_init.sh\"" && bash $HOME/.profile true && source $HOME/.profile
+echo "Starting bash with \".bash_init.sh\""
+bash $HOME/.profile true
+echo "Done..."
+echo "Use \"source ~/.bashrc\" to load config or restart bash"
