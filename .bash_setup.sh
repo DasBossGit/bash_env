@@ -336,6 +336,15 @@ setup_user() {
             } || {
                 echo "Unable to link .profile for $user ( $? )"
             }
+            ln -s -f /usr/share/bash_env/.bash_init.sh $user_pwd/.bashrc && {
+                chmod 777 $user_pwd/.bashrc && {
+                    echo "Linked .bashrc for $user ( $user_pwd/.bashrc )"
+                } || {
+                    echo "Unable to change permission for \"$user_pwd/.bashrc\""
+                }
+            } || {
+                echo "Unable to link .bashrc for $user ( $? )"
+            }
         fi
     done
     unset $user
