@@ -25,3 +25,4 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 export a01a82e583105ab49dc3f83ba5fc24e5_PS1
+echo "test"
