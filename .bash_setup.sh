@@ -60,7 +60,7 @@ set_default_shell "root" "/bin/bash" || {
 #EOF
 
 #check repositories
-{
+check_apk_repo_list() {
     if ! test -f /etc/apk/repositories; then
         touch /etc/apk/repositories && chmod 777 /etc/apk/repositories
     fi
@@ -90,7 +90,7 @@ $repositories""" >/etc/apk/repositories && echo "...Done"
 }
 
 #check repositories
-{
+check_repositories() {
     is_variable_set() {
         declare -p "$1" &>/dev/null
     }
@@ -159,7 +159,7 @@ $repositories""" >/etc/apk/repositories && echo "...Done"
 }
 
 #setup Powershell
-{
+setup_powershell() {
     if ! [ -f /opt/microsoft/powershell/7/pwsh ] || ! [ -f /usr/bin/pwsh ]; then
         if ! [ -d /tmp ]; then
             mkdir /tmp && chmod 777 /tmp
@@ -197,7 +197,7 @@ $repositories""" >/etc/apk/repositories && echo "...Done"
 }
 
 #check bash_env folder
-{
+check_folder() {
     if ! [ -d /usr ]; then
         mkdir /usr
     fi
@@ -207,16 +207,42 @@ $repositories""" >/etc/apk/repositories && echo "...Done"
     if ! [ -d /usr/share/bash_env ]; then
         mkdir /usr/share/bash_env && chmod 777 /usr/share/bash_env && echo "bash_env folder created..."
     fi
+    [ -f /usr/share/bash_env/.bash_init.sh ] || {
+        {
+            curl -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/raw/branch/main/README.md >/dev/null && {
+                URL="https://git.mm-ger.com/markus/bash_env/raw/branch/main/.bash_init.sh"
+            } || {
+                URL="https://raw.githubusercontent.com/DasBossGit/bash_env/main/.bash_init.sh"
+            }
+        } && {
+            {
+                curl -s --connect-timeout 1 --max-time 3 -L $URL -o /usr/share/bash_env/.bash_init.sh
+            } && {
+                chmod +x /usr/share/bash_env/.*.sh && {
+                    echo "\".bash_init.sh\" set up"
+                } || {
+                    echo "Unable to chmod \".bash_init.sh\""
+                }
+            } || {
+                echo "Unable to download \".bash_init.sh\" from \"$URL\""
+                exit 2
+            }
+        } || {
+            echo "Unable to fetch \".bash_init.sh\""
+            exit 1
+        }
+    }
 }
-#download profile
-{
 
+download_profile() {
+    echo ""
 }
 
-#setup user
-{
+setup_user() {
+    echo -e "\n\nBe sure to create a Backup - trust yourself - i'd be better"
+    read -p "Press enter to continue"
     echo -e "\n\n"
-    awk -F: '{ print " - " $1}' /etc/passwd
+    awk -F: '{ print " - " $1}' <<<$(grep -v "/sbin/nologin" /etc/passwd)
     while [ "$users_exist" != "true" ]; do
         echo -e "\n" && read -r -p "List users to setup (colon-separated): " users #<<<"root;markus"
         readarray -d ";" -t users <<<$users
@@ -227,14 +253,56 @@ $repositories""" >/etc/apk/repositories && echo "...Done"
             }
         done
     done
+    unset user
     unset user_exist
     for user in ${users[@]}; do
         user_pwd=$(su - "$user" -c "echo \$HOME")
         if [ -d "$user_pwd" ]; then
-            ln -f /usr/share/bash_env/.bash_init.sh $user_pwd/.bashrc
-            chmod 777 $user_pwd/.bashrc
+            ln -s -f /usr/share/bash_env/.bash_init.sh $user_pwd/.bashrc && {
+                chmod 777 $user_pwd/.bashrc && {
+                    echo "Linked .bashrc for $user ( $user_pwd/.bashrc )"
+                    while true; do
+                        read -n 1 -r -p "Clean user profile?" a99b8edbe2c75d39aac6399da4314a4b
+                        if [[ $a99b8edbe2c75d39aac6399da4314a4b =~ ^([NnYy]|(false)|(true)|1|0)$ ]]; then
+                            if [[ $a99b8edbe2c75d39aac6399da4314a4b =~ ^([Yy]|(true)|1)$ ]]; then
+                                unset a99b8edbe2c75d39aac6399da4314a4b
+                                [ -d $user_pwd/.profile_old ] || {
+                                    mkdir $user_pwd/.profile_old || {
+                                        echo "Unable to create \"$user_pwd/.profile_old\" folder ( $? )"
+                                        break 1
+                                    }
+                                }
+                                folder_old_name=$(date '+%Y-%m-%d_%H-%M-%S')
+                                mkdir $user_pwd/.profile_old/$folder_old_name && {
+                                    echo "Previous configuration can be found at \"$user_pwd/.profile_old\""
+                                    {
+                                        mv $user_pwd/.bashrc $user_pwd/.profile_old 2>&1 >/dev/null
+                                        mv $user_pwd/.bash_source $user_pwd/.profile_old 2>&1 >/dev/null
+                                        mv $user_pwd/.profile $user_pwd/.profile_old 2>&1 >/dev/null
+                                        mv $user_pwd/.vimrc_git $user_pwd/.profile_old 2>&1 >/dev/null
+                                        mv $user_pwd/.vimrc $user_pwd/.profile_old 2>&1 >/dev/nulll
+                                    } >/dev/null
+                                    true
+                                } || {
+                                    echo "Unable to create \"$user_pwd/.profile_old/$folder_old_name\" folder ( $? )"
+                                }
+                            fi
+                            break 1
+                        fi
+                    done
+                } || {
+                    echo "Unable to change permission for \"$user_pwd/.bashrc\""
+                }
+            } || {
+                echo "Unable to link .bashrc for $user ( $? )"
+            }
         fi
     done
-
+    unset $user
+    unset $users
+    unset $user_pwd
+    unset $users_exist
     exit
 }
+
+check_folder
