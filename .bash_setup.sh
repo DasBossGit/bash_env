@@ -16,46 +16,6 @@ if ! [ -x "$(
     apk add bash || doas apk add bash || echo "Unable to automatically install BASH"
 fi
 
-get_default_shell() {
-    if [ -z $1 ]; then
-        echo "No user specified" >2 &
-        return 1
-    fi
-    sys_users=$(awk -F: '{ print $1 ":" $7}' /etc/passwd)
-    grep "^$1:" <<<$(echo "$sys_users") | cut -d : -f 2
-}
-
-set_default_shell() {
-    if [ -z "$1" ]; then
-        echo "No user specified" >2 &
-        return 1
-    fi
-    if ! [ -f "$2" ]; then
-        echo "specified SHELL not found"
-        return 2
-    elif ! [ -x "$2" ]; then
-        echo "specified SHELL not an executable"
-        return 3
-    fi
-    if [ $(get_default_shell "root") == "$2" ]; then
-        return 0
-    fi
-    if [ $(awk -F: '{ print $1}' /etc/passwd | grep "^$1$") ]; then
-        echo "Changing SHELL for \"$1\" to \"$2\"..."
-        chsh --shell "$2" "$1" >/dev/null
-        awk -F: '{ print $1 ":" $7}' /etc/passwd | grep "^$1:$2$" >/dev/null && {
-            echo "Default SHELL set successfully!"
-            return 0
-        } || echo "ERROR setting default SHELL"
-    fi
-    return 4
-}
-set_default_shell "root" "/bin/bash" || {
-    echo "BASH needs to be the default SHELL" >&2
-    echo "Aborting..." >2 &
-    exit
-}
-
 #End multiline comment
 #EOF
 
@@ -157,6 +117,48 @@ check_repositories() {
             unset p_args
         fi
     done
+}
+
+get_default_shell() {
+    if [ -z $1 ]; then
+        echo "No user specified" >2 &
+        return 1
+    fi
+    sys_users=$(awk -F: '{ print $1 ":" $7}' /etc/passwd)
+    grep "^$1:" <<<$(echo "$sys_users") | cut -d : -f 2
+}
+
+set_default_shell() {
+    if [ -z "$1" ]; then
+        echo "No user specified" >2 &
+        return 1
+    fi
+    if ! [ -f "$2" ]; then
+        echo "specified SHELL not found"
+        return 2
+    elif ! [ -x "$2" ]; then
+        echo "specified SHELL not an executable"
+        return 3
+    fi
+    if [ $(get_default_shell "root") == "$2" ]; then
+        return 0
+    fi
+    if [ -x "$(command -v $p_bin)" ]; then
+        echo "\"chsh\" from \"shadow\" not found" >&2
+        install_package shadow chsh "" || {
+            echo "Unable to install dependency"
+            return 5
+        }
+    fi
+    if [ $(awk -F: '{ print $1}' /etc/passwd | grep "^$1$") ]; then
+        echo "Changing SHELL for \"$1\" to \"$2\"..."
+        chsh --shell "$2" "$1" >/dev/null
+        awk -F: '{ print $1 ":" $7}' /etc/passwd | grep "^$1:$2$" >/dev/null && {
+            echo "Default SHELL set successfully!"
+            return 0
+        } || echo "ERROR setting default SHELL"
+    fi
+    return 4
 }
 
 #setup Powershell
@@ -298,6 +300,10 @@ setup_user() {
         user_pwd=$(su - "$user" -c "echo \$HOME")
         if [ -d "$user_pwd" ]; then
             unset a99b8edbe2c75d39aac6399da4314a4b
+            echo "Setting default SHELL to BASH"
+            set_default_shell "$user" "/bin/bash" || {
+                echo "Unable to set SHELL \"/bin/bash\" for \"$user\""
+            }
             while true; do
                 read -n 1 -r -p "Clean user dir?" a99b8edbe2c75d39aac6399da4314a4b
                 if [[ $a99b8edbe2c75d39aac6399da4314a4b =~ ^([NnYy]|(false)|(true)|1|0)$ ]]; then
