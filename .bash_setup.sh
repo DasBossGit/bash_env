@@ -351,7 +351,6 @@ setup_user() {
     unset $users
     unset $user_pwd
     unset $users_exist
-    exit
 }
 
 shopt -s dotglob
@@ -365,3 +364,4 @@ echo "start \"download_profile\"" && download_profile || {
     echo "Error during \".bash_init.sh\" setup" && exit 1
 } && echo "done \"download_profile\""
 echo "start \"setup_user\"" && setup_user && echo "done \"setup_user\""
+echo "Loading \".bash_init.sh\"" && bash $HOME/.profile true && source $HOME/.profile
