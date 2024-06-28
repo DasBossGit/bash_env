@@ -15,13 +15,13 @@ if [ -n "$BASH_VERSION" ]; then
     }
     PS1=$a01a82e583105ab49dc3f83ba5fc24e5_PS1
 # use nicer PS1 for zsh
-elif [ -n "$ZSH_VERSION" ]; then
-    a01a82e583105ab49dc3f83ba5fc24e5_PS1='%m:%~%# '
-    # set up fallback default PS1
-else
-    : "${HOSTNAME:=$(hostname)}"
-    a01a82e583105ab49dc3f83ba5fc24e5_PS1='${HOSTNAME%%.*}:$PWD'
-    [ "$(id -u)" -eq 0 ] && a01a82e583105ab49dc3f83ba5fc24e5_PS1="${PS1}# " || a01a82e583105ab49dc3f83ba5fc24e5_PS1="${PS1}\$ "
+#elif [ -n "$ZSH_VERSION" ]; then
+#    a01a82e583105ab49dc3f83ba5fc24e5_PS1='%m:%~%# '
+#    # set up fallback default PS1
+#else
+#    : "${HOSTNAME:=$(hostname)}"
+#    a01a82e583105ab49dc3f83ba5fc24e5_PS1='${HOSTNAME%%.*}:$PWD'
+#    [ "$(id -u)" -eq 0 ] && a01a82e583105ab49dc3f83ba5fc24e5_PS1="${PS1}# " || a01a82e583105ab49dc3f83ba5fc24e5_PS1="${PS1}\$ "
 fi
 
 export a01a82e583105ab49dc3f83ba5fc24e5_PS1
