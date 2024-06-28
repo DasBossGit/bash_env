@@ -90,8 +90,9 @@ update() {
     } || {
         URL="https://github.com/DasBossGit/bash_env/tarball/main" && TAR_ARGS="-xz"
     }
-    curl -s --connect-timeout 1 --max-time 3 -L $URL | tar $TAR_ARGS --overwrite -C /usr/share && {
+    curl -s --connect-timeout 1 --max-time 3 -L $URL | tar $TAR_ARGS --same-owner --overwrite -C /usr/share && {
         {
+            chmod -R 777 /usr/share/bash_env/*
             chmod +x /usr/share/bash_env/.*.sh
         }
         return 0
@@ -99,6 +100,8 @@ update() {
         return 1
     }
 }
+
+shopt -s dotglob
 
 # Pull all necessary files here (either local or remote)
 

@@ -205,12 +205,41 @@ check_folder() {
         mkdir /usr/share
     fi
     if ! [ -d /usr/share/bash_env ]; then
-        mkdir /usr/share/bash_env && chmod 777 /usr/share/bash_env && echo "bash_env folder created..."
+        mkdir /usr/share/bash_env && chmod -R 777 /usr/share/bash_env && chmod -R 777 /usr/share/bash_env/* && echo "bash_env folder created..."
     fi
 
 }
 
 download_profile() {
+    while true; do
+        read -n 1 -r -p "Clean user profile?" e43098ac857f544ca88fa24b9542bbfe
+        if [[ $e43098ac857f544ca88fa24b9542bbfe =~ ^([NnYy]|(false)|(true)|1|0)$ ]]; then
+            if [[ $e43098ac857f544ca88fa24b9542bbfe =~ ^([Yy]|(true)|1)$ ]]; then
+                unset e43098ac857f544ca88fa24b9542bbfe
+                profile_old_name=$(date '+%Y-%m-%d_%H-%M-%S')
+                mv /etc/profile /etc/profile_$profile_old_name && {
+                    {
+                        curl -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/raw/branch/main/README.md >/dev/null && {
+                            URL="https://git.mm-ger.com/markus/bash_env/raw/branch/main/profile"
+                        } || {
+                            URL="https://raw.githubusercontent.com/DasBossGit/bash_env/main/profile"
+                        }
+                    } && {
+                        {
+                            curl -s --connect-timeout 1 --max-time 3 -L $URL >/etc/profile && {
+                                echo "\"/etc/profile\" set up"
+                            } || {
+                                echo "Unable to setup \"/etc/profile\" ( $? )"
+                            }
+                        }
+                    }
+                }
+                break 1
+            fi
+            break 1
+        fi
+    done
+
     #[ -f /usr/share/bash_env/.bash_init.sh ] || {
     {
         curl -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/raw/branch/main/README.md >/dev/null && {
@@ -224,7 +253,13 @@ download_profile() {
         } && {
             chmod +x /usr/share/bash_env/.*.sh && {
                 echo "\".bash_init.sh\" set up"
-                return 0
+                chmod -R 777 /usr/share/bash_env/* && {
+                    echo "Modified Permissions to file"
+                    return 0
+                } || {
+                    return 4
+                }
+
             } || {
                 echo "Unable to chmod \".bash_init.sh\""
             }
@@ -241,6 +276,7 @@ download_profile() {
 }
 
 setup_user() {
+    sleep 0.5
     echo -e "\n\nBe sure to create a Backup - trust yourself - i'd be better"
     read -p "Press enter to continue"
     echo -e "\n\n"
@@ -261,43 +297,43 @@ setup_user() {
         user_pwd=$(su - "$user" -c "echo \$HOME")
         if [ -d "$user_pwd" ]; then
             unset a99b8edbe2c75d39aac6399da4314a4b
-            ln -s -f /usr/share/bash_env/.bash_init.sh $user_pwd/.bashrc && {
-                chmod 777 $user_pwd/.bashrc && {
-                    echo "Linked .bashrc for $user ( $user_pwd/.bashrc )"
-                    while true; do
-                        read -n 1 -r -p "Clean user profile?" a99b8edbe2c75d39aac6399da4314a4b
-                        if [[ $a99b8edbe2c75d39aac6399da4314a4b =~ ^([NnYy]|(false)|(true)|1|0)$ ]]; then
-                            if [[ $a99b8edbe2c75d39aac6399da4314a4b =~ ^([Yy]|(true)|1)$ ]]; then
-                                unset a99b8edbe2c75d39aac6399da4314a4b
-                                [ -d $user_pwd/.profile_old ] || {
-                                    mkdir $user_pwd/.profile_old || {
-                                        echo "Unable to create \"$user_pwd/.profile_old\" folder ( $? )"
-                                        break 1
-                                    }
-                                }
-                                folder_old_name=$(date '+%Y-%m-%d_%H-%M-%S')
-                                mkdir $user_pwd/.profile_old/$folder_old_name && {
-                                    echo "Previous configuration can be found at \"$user_pwd/.profile_old\""
-                                    {
-                                        mv $user_pwd/.bashrc $user_pwd/.profile_old 2>&1 >/dev/null
-                                        mv $user_pwd/.bash_source $user_pwd/.profile_old 2>&1 >/dev/null
-                                        mv $user_pwd/.profile $user_pwd/.profile_old 2>&1 >/dev/null
-                                        mv $user_pwd/.vimrc_git $user_pwd/.profile_old 2>&1 >/dev/null
-                                        mv $user_pwd/.vimrc $user_pwd/.profile_old 2>&1 >/dev/nulll
-                                    } >/dev/null
-                                    true
-                                } || {
-                                    echo "Unable to create \"$user_pwd/.profile_old/$folder_old_name\" folder ( $? )"
-                                }
-                            fi
-                            break 1
-                        fi
-                    done
+            while true; do
+                read -n 1 -r -p "Clean user dir?" a99b8edbe2c75d39aac6399da4314a4b
+                if [[ $a99b8edbe2c75d39aac6399da4314a4b =~ ^([NnYy]|(false)|(true)|1|0)$ ]]; then
+                    if [[ $a99b8edbe2c75d39aac6399da4314a4b =~ ^([Yy]|(true)|1)$ ]]; then
+                        unset a99b8edbe2c75d39aac6399da4314a4b
+                        [ -d $user_pwd/.profile_old ] || {
+                            mkdir $user_pwd/.profile_old || {
+                                echo "Unable to create \"$user_pwd/.profile_old\" folder ( $? )"
+                                break 1
+                            }
+                        }
+                        folder_old_name=$(date '+%Y-%m-%d_%H-%M-%S')
+                        mkdir $user_pwd/.profile_old/$folder_old_name && {
+                            echo "Previous configuration can be found at \"$user_pwd/.profile_old\""
+                            {
+                                mv $user_pwd/.bashrc $user_pwd/.profile_old 2>&1 >/dev/null
+                                mv $user_pwd/.bash_source $user_pwd/.profile_old 2>&1 >/dev/null
+                                mv $user_pwd/.profile $user_pwd/.profile_old 2>&1 >/dev/null
+                                mv $user_pwd/.vimrc_git $user_pwd/.profile_old 2>&1 >/dev/null
+                                mv $user_pwd/.vimrc $user_pwd/.profile_old 2>&1 >/dev/nulll
+                            } >/dev/null
+                            true
+                        } || {
+                            echo "Unable to create \"$user_pwd/.profile_old/$folder_old_name\" folder ( $? )"
+                        }
+                    fi
+                    break 1
+                fi
+            done
+            ln -s -f /usr/share/bash_env/.bash_init.sh $user_pwd/.profile && {
+                chmod 777 $user_pwd/.profile && {
+                    echo "Linked .profile for $user ( $user_pwd/.profile )"
                 } || {
-                    echo "Unable to change permission for \"$user_pwd/.bashrc\""
+                    echo "Unable to change permission for \"$user_pwd/.profile\""
                 }
             } || {
-                echo "Unable to link .bashrc for $user ( $? )"
+                echo "Unable to link .profile for $user ( $? )"
             }
         fi
     done
@@ -308,12 +344,14 @@ setup_user() {
     exit
 }
 
-check_apk_repo_list
-check_repositories
-setup_powershell
+shopt -s dotglob
 
-check_folder
-download_profile || {
+echo "start \"check_apk_repo_list\"" && check_apk_repo_list && echo "done \"check_apk_repo_list\""
+echo "start \"check_repositories\"" && check_repositories && echo "done \"check_repositories\""
+echo "start \"setup_powershell\"" && setup_powershell && echo "done \"setup_powershell\""
+
+echo "start \"check_folder\"" && check_folder && echo "done \"check_folder\""
+echo "start \"download_profile\"" && download_profile || {
     echo "Error during \".bash_init.sh\" setup" && exit 1
-}
-setup_user
+} && echo "done \"download_profile\""
+echo "start \"setup_user\"" && setup_user && echo "done \"setup_user\""
