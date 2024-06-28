@@ -113,7 +113,7 @@ shopt -s dotglob
 # if first arg passed to script is empty, source all
 # otherwise just download
 update && {
-    [ $1 == "true "] || {
+    [ $1 == "true" ] || {
         if [ -d /usr/share/bash_env ]; then
             [ -f /usr/share/bash_env/.bash_style.sh ] && {
                 source /usr/share/bash_env/.bash_style.sh || {
