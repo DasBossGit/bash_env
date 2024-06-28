@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #check if root
 {
     if [ $(id -u) -ne 0 ]; then
@@ -47,6 +49,7 @@ $repositories""" >/etc/apk/repositories && echo "...Done"
     unset repositories_file
     unset repositories
     unset repo
+
 }
 
 #check repositories
@@ -215,7 +218,7 @@ check_folder() {
 
 download_profile() {
     while true; do
-        read -n 1 -r -p "Clean user profile?" e43098ac857f544ca88fa24b9542bbfe
+        read -n 1 -r -p "Clean global /etc/profile?" e43098ac857f544ca88fa24b9542bbfe
         if [[ $e43098ac857f544ca88fa24b9542bbfe =~ ^([NnYy]|(false)|(true)|1|0)$ ]]; then
             if [[ $e43098ac857f544ca88fa24b9542bbfe =~ ^([Yy]|(true)|1)$ ]]; then
                 unset e43098ac857f544ca88fa24b9542bbfe
@@ -297,7 +300,7 @@ setup_user() {
     unset user
     unset user_exist
     for user in ${users[@]}; do
-        user_pwd=$(su - "$user" -c "echo \$HOME")
+        user_pwd=$(su - "root" -s /bin/bash -c "echo \$HOME")
         if [ -d "$user_pwd" ]; then
             unset a99b8edbe2c75d39aac6399da4314a4b
             echo "Setting default SHELL to BASH"
@@ -319,12 +322,12 @@ setup_user() {
                         mkdir $user_pwd/.profile_old/$folder_old_name && {
                             echo "Previous configuration can be found at \"$user_pwd/.profile_old\""
                             {
-                                mv $user_pwd/.bashrc $user_pwd/.profile_old 2>&1 >/dev/null
-                                mv $user_pwd/.bash_source $user_pwd/.profile_old 2>&1 >/dev/null
-                                mv $user_pwd/.profile $user_pwd/.profile_old 2>&1 >/dev/null
-                                mv $user_pwd/.vimrc_git $user_pwd/.profile_old 2>&1 >/dev/null
-                                mv $user_pwd/.vimrc $user_pwd/.profile_old 2>&1 >/dev/nulll
-                            } >/dev/null
+                                mv "$user_pwd/.bashrc" "$user_pwd/.profile_old" 2>&1 >/dev/null
+                                mv "$user_pwd/.bash_source" "$user_pwd/.profile_old" 2>&1 >/dev/null
+                                mv "$user_pwd/.profile" "$user_pwd/.profile_old" 2>&1 >/dev/null
+                                mv "$user_pwd/.vimrc_git" "$user_pwd/.profile_old" 2>&1 >/dev/null
+                                mv "$user_pwd/.vimrc" "$user_pwd/.profile_old" 2>&1 >/dev/nulll
+                            }
                             true
                         } || {
                             echo "Unable to create \"$user_pwd/.profile_old/$folder_old_name\" folder ( $? )"
