@@ -97,10 +97,6 @@ update() {
                     for file in $HOME/c60a76b43bf7578e99bf5dcd17bc240b/bash_env/*; do
                         cat $file >/usr/share/bash_env/$(basename "$file") || echo "Unable to modify \"$(basename "$file")\""
                     done
-                    echo "done moding files"
-                    chmod -R 777 /usr/share/bash_env/*
-                    echo "done 777"
-                    chmod +x /usr/share/bash_env/.*.sh
                 }
                 return 0
             } || {

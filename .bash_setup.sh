@@ -130,6 +130,7 @@ check_repositories() {
     icu-libs%%
     libgdiplus%%
     lttng-ust%%
+    acl%setfacl%
     shadow%chsh%
     tar%tar%
     fping%fping%
@@ -205,7 +206,7 @@ check_folder() {
         mkdir /usr/share
     fi
     if ! [ -d /usr/share/bash_env ]; then
-        mkdir /usr/share/bash_env && chmod -R 777 /usr/share/bash_env && echo "bash_env folder created..."
+        mkdir /usr/share/bash_env && chmod -R 777 /usr/share/bash_env && setfacl -d -m "u::rwx,g::rwx,o::rwx" /usr/share/bash_env/ && echo "bash_env folder created..."
     fi
 
 }
