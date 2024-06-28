@@ -207,35 +207,37 @@ check_folder() {
     if ! [ -d /usr/share/bash_env ]; then
         mkdir /usr/share/bash_env && chmod 777 /usr/share/bash_env && echo "bash_env folder created..."
     fi
-    [ -f /usr/share/bash_env/.bash_init.sh ] || {
-        {
-            curl -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/raw/branch/main/README.md >/dev/null && {
-                URL="https://git.mm-ger.com/markus/bash_env/raw/branch/main/.bash_init.sh"
-            } || {
-                URL="https://raw.githubusercontent.com/DasBossGit/bash_env/main/.bash_init.sh"
-            }
-        } && {
-            {
-                curl -s --connect-timeout 1 --max-time 3 -L $URL -o /usr/share/bash_env/.bash_init.sh
-            } && {
-                chmod +x /usr/share/bash_env/.*.sh && {
-                    echo "\".bash_init.sh\" set up"
-                } || {
-                    echo "Unable to chmod \".bash_init.sh\""
-                }
-            } || {
-                echo "Unable to download \".bash_init.sh\" from \"$URL\""
-                exit 2
-            }
-        } || {
-            echo "Unable to fetch \".bash_init.sh\""
-            exit 1
-        }
-    }
+
 }
 
 download_profile() {
-    echo ""
+    #[ -f /usr/share/bash_env/.bash_init.sh ] || {
+    {
+        curl -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/raw/branch/main/README.md >/dev/null && {
+            URL="https://git.mm-ger.com/markus/bash_env/raw/branch/main/.bash_init.sh"
+        } || {
+            URL="https://raw.githubusercontent.com/DasBossGit/bash_env/main/.bash_init.sh"
+        }
+    } && {
+        {
+            curl -s --connect-timeout 1 --max-time 3 -L $URL -o /usr/share/bash_env/.bash_init.sh
+        } && {
+            chmod +x /usr/share/bash_env/.*.sh && {
+                echo "\".bash_init.sh\" set up"
+                return 0
+            } || {
+                echo "Unable to chmod \".bash_init.sh\""
+            }
+        } || {
+            echo "Unable to download \".bash_init.sh\" from \"$URL\""
+            return 2
+        }
+    } || {
+        echo "Unable to fetch \".bash_init.sh\""
+        return 1
+    }
+    #}
+    return 3
 }
 
 setup_user() {
@@ -258,6 +260,7 @@ setup_user() {
     for user in ${users[@]}; do
         user_pwd=$(su - "$user" -c "echo \$HOME")
         if [ -d "$user_pwd" ]; then
+            unset a99b8edbe2c75d39aac6399da4314a4b
             ln -s -f /usr/share/bash_env/.bash_init.sh $user_pwd/.bashrc && {
                 chmod 777 $user_pwd/.bashrc && {
                     echo "Linked .bashrc for $user ( $user_pwd/.bashrc )"
@@ -305,4 +308,12 @@ setup_user() {
     exit
 }
 
+check_apk_repo_list
+check_repositories
+setup_powershell
+
 check_folder
+download_profile || {
+    echo "Error during \".bash_init.sh\" setup" && exit 1
+}
+setup_user
