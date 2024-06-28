@@ -300,7 +300,7 @@ setup_user() {
     unset user
     unset user_exist
     for user in ${users[@]}; do
-        user_pwd=$(su - "root" -s /bin/bash -c "echo \$HOME")
+        user_pwd=$(su - "$user" -s /bin/bash -c "echo \$HOME")
         if [ -d "$user_pwd" ]; then
             unset a99b8edbe2c75d39aac6399da4314a4b
             echo "Setting default SHELL to BASH"
