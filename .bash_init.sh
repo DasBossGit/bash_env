@@ -91,10 +91,14 @@ update() {
         URL="https://github.com/DasBossGit/bash_env/tarball/main" && TAR_ARGS="-xz"
     }
     mkdir $HOME/c60a76b43bf7578e99bf5dcd17bc240b -p && {
+        echo "mkdir \$HOME/c60a76b43bf7578e99bf5dcd17bc240b"
         chmod -R 777 $HOME/c60a76b43bf7578e99bf5dcd17bc240b && {
+            echo "chmod -R 777 \$HOME/c60a76b43bf7578e99bf5dcd17bc240b"
             curl -s --connect-timeout 1 --max-time 3 -L $URL | tar $TAR_ARGS --same-owner --overwrite -C $HOME/c60a76b43bf7578e99bf5dcd17bc240b && {
                 {
+                    echo "curl | tar"
                     for file in $HOME/c60a76b43bf7578e99bf5dcd17bc240b/bash_env; do
+                        echo "$file"
                         cat $file >/usr/share/bash_env/$(basename "$file") && echo "\"$(basename "$file")\" overwritten"
                     done
                     chmod -R 777 /usr/share/bash_env/*
