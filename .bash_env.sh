@@ -11,7 +11,7 @@ if [ -f ~/.vimrc ]; then
 
     export VISUAL="$NVIM -u ~/.vimrc"
     export VIMRC="~/.vimrc"
-elif [ -f ~/.vimrc ]; then
+elif [ -f ~/.vimrc_git ]; then
     export VISUAL="$NVIM -u ~/.vimrc_git"
     export VIMRC="~/.vimrc_git"
 else

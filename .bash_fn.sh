@@ -6,19 +6,23 @@ g() {
     grep -E "$@"
 }
 vi() {
-    "$NVIM" -u "$VIMRC" "$@"
+    nvim "$@"
 }
 vim() {
-    "$NVIM" -u "$VIMRC" "$@"
+    nvim "$@"
 }
 nvim() {
-    "$NVIM" -u "$VIMRC" "$@"
+    [ -n $VIMRC ] && {
+        "$NVIM" -u "$VIMRC" "$@"
+    } || {
+        "$NVIM" "$@"
+    }
 }
 neovim() {
-    "$NVIM" -u "$VIMRC" "$@"
+    nvim "$@"
 }
 e() {
-    "$NVIM" -u "$VIMRC" "$@"
+    nvim "$@"
 }
 dash() {
     doas bash
