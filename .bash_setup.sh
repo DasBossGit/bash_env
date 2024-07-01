@@ -154,7 +154,7 @@ set_default_shell() {
         echo "specified SHELL not an executable"
         return 3
     fi
-    if [ $(get_default_shell "root") == "$2" ]; then
+    if [ $(get_default_shell "$1") == "$2" ]; then
         return 0
     fi
     if [ -x "$(command -v $p_bin)" ]; then
