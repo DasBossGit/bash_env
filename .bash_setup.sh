@@ -17,6 +17,17 @@ if ! [ -x "$(
     echo "BASH not installed..."
     apk add bash || doas apk add bash || echo "Unable to automatically install BASH"
 fi
+#if ! [ -x "$(
+#    command -v doas
+#)" ]; then
+#    echo "doas not installed, but required..."
+#    apk add bash || {
+#        echo -e "doas installation failed\nAborting..."
+#    } && {
+#        echo -e "Please setup doas and rerun this script..."
+#    }
+#    exit 1
+#fi
 
 #End multiline comment
 #EOF
