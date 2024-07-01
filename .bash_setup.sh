@@ -223,6 +223,8 @@ check_folder() {
     fi
     if ! [ -d /usr/share/bash_env ]; then
         mkdir /usr/share/bash_env && chmod -R 777 /usr/share/bash_env && setfacl -d -m "u::rwx,g::rwx,o::rwx" /usr/share/bash_env/ && echo "bash_env folder created..."
+    else
+        chmod -R 777 /usr/share/bash_env && setfacl -d -m "u::rwx,g::rwx,o::rwx" /usr/share/bash_env/
     fi
 
 }
