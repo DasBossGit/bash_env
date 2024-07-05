@@ -85,6 +85,7 @@ is_local_accessable() {
 }
 
 update() {
+    
     is_local_accessable && {
         URL="https://git.mm-ger.com/markus/bash_env/archive/main.tar.gz" && TAR_ARGS="-xz"
     } || {

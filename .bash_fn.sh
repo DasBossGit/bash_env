@@ -65,5 +65,7 @@ dash() {
     echo ""
 }
 
-echo 'Old line'
-echo -e '\e[1A\e[Knew line'
+
+echo -e "\e[1A\e[K${NEW}"
+NEW="TEST" echo -e "\e[1A\e[K${NEW}"
+echo -e "\e[1A\e[K${NEW}"
