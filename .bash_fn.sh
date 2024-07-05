@@ -64,3 +64,6 @@ dash() {
 71d317a8_cda4_5b65_bbb2_96537c38ee81_setup_powershell() {
     echo ""
 }
+
+echo 'Old line'
+echo -e '\e[1A\e[Knew line'
