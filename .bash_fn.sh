@@ -67,5 +67,5 @@ dash() {
 
 
 echo -e "${NEW}"
-NEW="TEST" echo -e "${NEW}"
+NEW="TEST"; echo -e "${NEW}"
 echo -e "${NEW}"
