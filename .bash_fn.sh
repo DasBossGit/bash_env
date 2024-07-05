@@ -66,6 +66,6 @@ dash() {
 }
 
 
-echo -e "\e[1A\e[K${NEW}"
-NEW="TEST" echo -e "\e[1A\e[K${NEW}"
-echo -e "\e[1A\e[K${NEW}"
+echo -e "${NEW}"
+NEW="TEST" echo -e "${NEW}"
+echo -e "${NEW}"
