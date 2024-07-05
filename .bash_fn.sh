@@ -64,8 +64,3 @@ dash() {
 71d317a8_cda4_5b65_bbb2_96537c38ee81_setup_powershell() {
     echo ""
 }
-
-
-echo -e "${NEW}"
-NEW="TEST"; echo -e "${NEW}"
-echo -e "${NEW}"

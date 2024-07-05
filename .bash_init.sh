@@ -85,22 +85,27 @@ is_local_accessable() {
 }
 
 update() {
-    
+    echo -e "\e[1A\e[KChecking availability of local server..."
     is_local_accessable && {
+        echo -e "\e[1A\e[KLocal server available"
         URL="https://git.mm-ger.com/markus/bash_env/archive/main.tar.gz" && TAR_ARGS="-xz"
     } || {
+        echo -e "\e[1A\e[KLocal server not available"
         URL="https://github.com/DasBossGit/bash_env/tarball/main" && TAR_ARGS="-xz"
     }
     mkdir $HOME/c60a76b43bf7578e99bf5dcd17bc240b -p && {
         chmod -R 777 $HOME/c60a76b43bf7578e99bf5dcd17bc240b && {
+            echo -e "\e[1A\e[KMirroring files..."
             curl -s --connect-timeout 1 --max-time 3 -L $URL | tar $TAR_ARGS --overwrite -C $HOME/c60a76b43bf7578e99bf5dcd17bc240b && {
                 {
                     for file in $HOME/c60a76b43bf7578e99bf5dcd17bc240b/bash_env/*; do
                         cat $file >/usr/share/bash_env/$(basename "$file") || echo "Unable to modify \"$(basename "$file")\""
                     done
                 }
+                echo -e "\e[1A\e[KProfile updated"
                 return 0
             } || {
+                echo -e "\e[1A\e[KProfile could not be updated!"
                 return 1
             }
         }
