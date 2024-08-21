@@ -109,6 +109,7 @@ check_repositories() {
     zstd%%
     parted%%
     netcat-openbsd%%
+    pciutils%lspci%
     e2fsprogs%%
     btrfs-progs%%
     acl%setfacl%
