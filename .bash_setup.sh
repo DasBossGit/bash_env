@@ -104,6 +104,13 @@ check_repositories() {
     icu-libs%%
     libgdiplus%%
     lttng-ust%%
+    lshw%%
+    ethtool%%
+    zstd%%
+    parted%%
+    netcat-openbsd%%
+    e2fsprogs%%
+    btrfs-progs%%
     acl%setfacl%
     shadow%chsh%
     tar%tar%
