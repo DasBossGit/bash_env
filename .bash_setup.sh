@@ -283,14 +283,29 @@ download_profile() {
                 echo "\".bash_init.sh\" set up"
                 chmod -R 777 /usr/share/bash_env/* && {
                     echo "Modified Permissions to file"
-                    ln -s -f /usr/share/bash_env/.motd /etc/motd && {
-                        chmod 777 /etc/motd && {
-                            echo "Linked .motd ( /etc/motd )" && return 0
+                    {
+                        curl -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/raw/branch/main/README.md >/dev/null && {
+                            URL="https://git.mm-ger.com/markus/bash_env/raw/branch/main/.motd"
                         } || {
-                            echo "Unable to change permission for \"/etc/motd\"" && return 6
+                            URL="https://raw.githubusercontent.com/DasBossGit/bash_env/main/.motd"
                         }
-                    } || {
-                        echo "Unable to link .motd ( $? )" && return 5
+                    } && {
+                        {
+                            curl -s --connect-timeout 1 --max-time 3 -L $URL -o /usr/share/bash_env/.motd
+                        } && {
+                            ln -s -f /usr/share/bash_env/.motd /etc/motd && {
+                                chmod 777 /etc/motd && {
+                                    echo "Linked .motd ( /etc/motd )" && return 0
+                                } || {
+                                    echo "Unable to change permission for \"/etc/motd\"" && return 6
+                                }
+                            } || {
+                                echo "Unable to link .motd ( $? )" && return 5
+                            }
+                        } || {
+                            echo "Unable to fetch \".motd\""
+                            return 7
+                        }
                     }
                 } || {
                     return 4
