@@ -1,0 +1,8 @@
+Welcome to Alpine!
+
+The Alpine Wiki contains a large amount of how-to guides and general
+information about administrating Alpine systems.
+See <https://wiki.alpinelinux.org/>.
+
+Use 'dash' or 'doas bash' to enter an elevated, colored bash.
+    'zellij' is the installed and preferred terminal-multiplexer

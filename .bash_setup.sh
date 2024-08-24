@@ -119,6 +119,7 @@ check_repositories() {
     curl%curl%
     neovim%nvim%
     python3%python3%--no-cache
+    zellij%%
     """ | awk NF | awk '{$1=$1};1')
     for package in ${packages[@]}; do
         IFS=\% read -ra package <<<"$package"
@@ -282,7 +283,15 @@ download_profile() {
                 echo "\".bash_init.sh\" set up"
                 chmod -R 777 /usr/share/bash_env/* && {
                     echo "Modified Permissions to file"
-                    return 0
+                    ln -s -f /usr/share/bash_env/.motd /etc/motd && {
+                        chmod 777 /etc/motd && {
+                            echo "Linked .motd ( /etc/motd )" && return 0
+                        } || {
+                            echo "Unable to change permission for \"/etc/motd\"" && return 6
+                        }
+                    } || {
+                        echo "Unable to link .motd ( $? )" && return 5
+                    }
                 } || {
                     return 4
                 }
