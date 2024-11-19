@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Run following command to install:
+# bash <(wget -qO- https://kutt.mm-ger.com/cIrLl7)
+
 # https://kutt.mm-ger.com/cIrLl7
 # .bash_setup
 
