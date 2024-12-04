@@ -87,6 +87,9 @@ is_local_accessable() {
     }
 }
 
+
+curl -s --connect-timeout 1 --max-time 3 -L "https://git.mm-ger.com/markus/bash_env/archive/main.tar.gz"
+
 update() {
     echo -e "\e[1A\e[KChecking availability of local server..."
     is_local_accessable && {
