@@ -111,12 +111,14 @@ check_repositories() {
     netcat-openbsd%%
     pciutils%lspci%
     e2fsprogs%%
+    e2fsprogs-extra%%
     btrfs-progs%%
     acl%setfacl%
     shadow%chsh%
     tar%tar%
     fping%fping%
     curl%curl%
+    findmnt%%
     neovim%nvim%
     python3%python3%--no-cache
     zellij%%
