@@ -73,20 +73,28 @@ get_hash() {
 
 is_local_accessable() {
     curl -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/raw/branch/main/README.md >/dev/null && {
-        return 0
+        [[ $(curl -I -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/raw/branch/main/README.md | head -n 1 | cut -d$' ' -f2) =~ ^[2][0-9]{2}$ ]] && {
+            [[ $(curl -I -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/archive/main.tar.gz | head -n 1 | cut -d$' ' -f2) =~ ^[2][0-9]{2}$ ]] && {
+                [[ $(curl -I -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/user/login | head -n 1 | cut -d$' ' -f2) =~ ^[2][0-9]{2}$ ]] && {
+                    return 0
+                }
+                return 3
+            }
+            return 2
+        }
+        return 1
     } || {
         (fping -c1 -t100 -p0 git.mm-ger.com 2>&1 >/dev/null && exit 0 || exit 1) >/dev/null || {
             echo "Local Server not reachable" >&2
             echo "Falling back to Github"
-            return 1
+            return 5
         } && {
             echo "Local Server pingable but Git Service offline" >&2
             echo "Falling back to Github"
-            return 2
+            return 4
         }
     }
 }
-
 
 curl -s --connect-timeout 1 --max-time 3 -L "https://git.mm-ger.com/markus/bash_env/archive/main.tar.gz"
 
