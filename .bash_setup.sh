@@ -289,7 +289,7 @@ download_profile() {
                         curl -s --connect-timeout 1 --max-time 3 https://git.mm-ger.com/markus/bash_env/raw/branch/main/README.md >/dev/null && {
                             URL="https://git.mm-ger.com/markus/bash_env/raw/branch/main/.motd"
                         } || {
-                            URL="https://raw.githubusercontent.com/DasBossGit/bash_env/main/.motd"
+                            URL="https://raw.githubusercontent.com/DasBossGit/bash_env/refs/heads/main/.motd"
                         }
                     } && {
                         {
