@@ -242,7 +242,7 @@ check_folder() {
 
 download_profile() {
     while true; do
-        read -n 1 -r -p "Clean global /etc/profile?" e43098ac857f544ca88fa24b9542bbfe
+        read -s -r -p "Clean global /etc/profile?" e43098ac857f544ca88fa24b9542bbfe
         if [[ $e43098ac857f544ca88fa24b9542bbfe =~ ^([NnYy]|(false)|(true)|1|0)$ ]]; then
             if [[ $e43098ac857f544ca88fa24b9542bbfe =~ ^([Yy]|(true)|1)$ ]]; then
                 unset e43098ac857f544ca88fa24b9542bbfe
@@ -333,7 +333,7 @@ setup_user() {
     echo -e "\n\nBe sure to create a Backup - trust yourself - i'd be better"
     read -p "Press enter to continue"
     echo -e "\n\n"
-    awk -F: '{ print " - " $1}' <<<$(grep -v "/sbin/nologin" /etc/passwd)
+    awk -F: '{ print " - " $1}' <<< $(grep -v "/sbin/nologin" /etc/passwd)
     while [ "$users_exist" != "true" ]; do
         echo -e "\n" && read -r -p "List users to setup (colon-separated): " users #<<<"root;markus"
         readarray -d ";" -t users <<<$users
