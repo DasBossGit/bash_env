@@ -111,8 +111,10 @@ update() {
             curl -s --connect-timeout 1 --max-time 3 -L $URL | tar $TAR_ARGS --overwrite -C $HOME/c60a76b43bf7578e99bf5dcd17bc240b && {
                 {
                     for file in $HOME/c60a76b43bf7578e99bf5dcd17bc240b/bash_env/*; do
-                        [[ "$file" =~ ((.*\.vscode.*)|(.*\.notes.*)) ]] || {
-                            cat $file >/usr/share/bash_env/$(basename "$file") || echo "Unable to modify \"$(basename "$file")\""
+                        [[ "$file" =~ ((.*\.vscode.*)|(.*\.notes.*)|(^$)) ]] || {
+                            [[ $(basename "$file") =~ (^\*$) ]] || {
+                                cat "$file" > /usr/share/bash_env/$(basename "$file") || echo "Unable to modify \"$(basename "$file")\""
+                            }
                         }
                     done
                 }

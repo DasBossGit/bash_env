@@ -411,16 +411,24 @@ setup_user() {
 
 shopt -s dotglob
 
-echo "start \"check_apk_repo_list\"" && check_apk_repo_list && echo "done \"check_apk_repo_list\""
-echo "start \"check_repositories\"" && check_repositories && echo "done \"check_repositories\""
-echo "start \"setup_powershell\"" && setup_powershell && echo "done \"setup_powershell\""
+echo "start 'check_apk_repo_list'" && check_apk_repo_list && echo "done 'check_apk_repo_list'"
 
-echo "start \"check_folder\"" && check_folder && echo "done \"check_folder\""
-echo "start \"download_profile\"" && download_profile || {
-    echo "Error during \".bash_init.sh\" setup" && exit 1
-} && echo "done \"download_profile\""
-echo "start \"setup_user\"" && setup_user && echo "done \"setup_user\""
-echo "Starting bash with \".bash_init.sh\""
+echo "start 'check_repositories'" && check_repositories && echo "done 'check_repositories'"
+
+echo "start 'setup_powershell'" && setup_powershell && echo "done 'setup_powershell'"
+
+echo "start 'check_folder'" && check_folder && echo "done 'check_folder'"
+
+echo "start 'download_profile'" && download_profile || {
+    echo "Error during '.bash_init.sh' setup" && exit 1
+} && echo "done 'download_profile'"
+
+echo "start 'setup_user'" && setup_user && echo "done 'setup_user'"
+
+echo "Starting bash with '.bash_init.sh'"
+
 bash $HOME/.profile true
+
 echo "Done..."
-echo "Use \"source ~/.bashrc\" to load config or restart bash"
+
+echo "Use 'source ~/.bashrc' to load config or restart bash"
